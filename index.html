@@ -14,14 +14,14 @@ html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;font-family
 .result{min-height:32px;color:#aaa;text-align:right;font-size:clamp(20px,5vw,30px);padding:0 8px 10px;overflow:hidden}
 .tools{height:clamp(48px,10vh,82px);flex-shrink:0;display:flex;align-items:center;justify-content:space-around;border-bottom:1px solid #333;margin-bottom:clamp(12px,2.2vh,20px)}
 .tools button{border:0;background:transparent;color:#eee;font-size:clamp(19px,5vw,27px);padding:6px;min-width:44px}
-.keys{flex-shrink:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:min(calc((100vw - 7vw - 3 * clamp(8px,2.2vw,16px))/4),calc((100dvh - 240px)/5));gap:clamp(8px,2.2vw,16px);justify-content:center}
-.key{width:100%;aspect-ratio:1;border:0;border-radius:50%;background:#191919;color:#fff;font-size:clamp(25px,6vw,42px);display:flex;align-items:center;justify-content:center;padding:0;line-height:1;-webkit-tap-highlight-color:transparent}
-.green{color:#39852b}.red{color:#ff3838}.equal{background:#398b29;color:#061006}.key:active{filter:brightness(1.45)}
+.keys{flex-shrink:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(5, calc((100vw - 7vw - 3 * clamp(8px,2.2vw,16px))/4));gap:clamp(8px,2.2vw,16px);justify-content:center}
+.key{width:100%;height:100%;aspect-ratio:1;border:0;border-radius:50%;background:#191919;color:#fff;font-size:clamp(30px,7vw,46px);display:flex;align-items:center;justify-content:center;padding:0;line-height:1;-webkit-tap-highlight-color:transparent}
+.green{color:#39852b;font-size:clamp(38px,9vw,56px)!important;font-weight:500}.red{color:#ff3838;font-size:clamp(38px,9vw,52px)!important}.equal{background:#398b29;color:#061006;font-size:clamp(38px,9vw,54px)!important}.key:active{filter:brightness(1.45)}
 #popup{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:24px;z-index:5}
 .popup-box{width:100%;max-width:340px;background:#191919;border:1px solid #398b29;border-radius:22px;padding:25px;text-align:center}
 .popup-box h2{color:#53b943;margin-top:0}.popup-box p{font-size:18px;line-height:1.45}
 .popup-box button{width:100%;padding:15px;border:0;border-radius:30px;background:#398b29;color:#071006;font-size:18px;font-weight:bold}
-@media(max-height:650px){.tools{height:40px;margin-bottom:7px}.keys{grid-auto-rows:min(calc((100vw - 7vw - 3 * 8px)/4),calc((100dvh - 175px)/5));gap:8px}#expression{padding-top:4px;padding-bottom:8px}}
+@media(max-height:650px){.tools{height:40px;margin-bottom:7px}.keys{grid-template-rows:repeat(5,calc((100vw - 7vw - 24px)/4));gap:6px}#expression{padding-top:4px;padding-bottom:8px}}
 </style>
 </head>
 <body>
