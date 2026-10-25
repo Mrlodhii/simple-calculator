@@ -1,76 +1,27 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
 <title>Calculator</title>
 <style>
 *{box-sizing:border-box}
-html,body{
-  margin:0;width:100%;height:100%;
-  background:#000;color:white;
-  font-family:Arial,sans-serif;
-  overflow:hidden;
-}
-.app{
-  height:100vh;height:100dvh;
-  width:100%;display:flex;
-  flex-direction:column;
-  padding:12px 3.5% max(12px,env(safe-area-inset-bottom));
-}
-.display-area{
-  flex:1;min-height:0;
-  display:flex;flex-direction:column;
-}
-#expression{
-  flex:1;min-height:0;width:100%;
-  background:transparent;border:0;outline:0;
-  color:white;text-align:right;
-  font-size:clamp(32px,8vw,60px);
-  padding:20px 8px;
-}
-.tools{
-  height:65px;flex-shrink:0;
-  display:flex;align-items:center;
-  justify-content:space-around;
-  border-bottom:1px solid #333;
-  margin-bottom:12px;
-}
-.tools button{
-  border:0;background:transparent;color:white;
-  font-size:23px;padding:8px;
-}
-.keys{
-  height: min(65%, 680px);
-  flex-shrink:0;
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-template-rows:repeat(5,minmax(0,1fr));
-  gap:clamp(8px,2.3vw,16px);
-}
-.key{
-  border:0;border-radius:50%;
-  background:#191919;color:white;
-  font-size:clamp(25px,6vw,40px);
-  display:flex;align-items:center;
-  justify-content:center;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-.green{color:#39852b}
-.red{color:#ff3838}
-.equal{background:#398b29;color:#071006}
-.key:active{filter:brightness(1.5)}
-.result{
-  font-size:clamp(22px,5vw,32px);
-  color:#999;text-align:right;
-  min-height:32px;padding-right:8px;
-}
-@media(max-height:700px){
-  .tools{height:42px;margin-bottom:7px}
-  .keys{height:66%;gap:6px}
-  .app{padding-top:5px}
-}
+html,body{margin:0;width:100%;height:100%;background:#000;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+.app{width:100%;height:100vh;height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 3.5% max(10px,env(safe-area-inset-bottom))}
+.display-area{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end}
+#expression{width:100%;flex:1;min-height:0;background:transparent;border:0;outline:0;color:#fff;text-align:right;font-size:clamp(38px,9vw,64px);padding:18px 8px 22px}
+.result{min-height:32px;color:#aaa;text-align:right;font-size:clamp(20px,5vw,30px);padding:0 8px 10px;overflow:hidden}
+.tools{height:clamp(48px,10vh,82px);flex-shrink:0;display:flex;align-items:center;justify-content:space-around;border-bottom:1px solid #333;margin-bottom:clamp(12px,2.2vh,20px)}
+.tools button{border:0;background:transparent;color:#eee;font-size:clamp(19px,5vw,27px);padding:6px;min-width:44px}
+.keys{flex-shrink:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:min(calc((100vw - 7vw - 3 * clamp(8px,2.2vw,16px))/4),calc((100dvh - 240px)/5));gap:clamp(8px,2.2vw,16px);justify-content:center}
+.key{width:100%;aspect-ratio:1;border:0;border-radius:50%;background:#191919;color:#fff;font-size:clamp(25px,6vw,42px);display:flex;align-items:center;justify-content:center;padding:0;line-height:1;-webkit-tap-highlight-color:transparent}
+.green{color:#39852b}.red{color:#ff3838}.equal{background:#398b29;color:#061006}.key:active{filter:brightness(1.45)}
+#popup{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:24px;z-index:5}
+.popup-box{width:100%;max-width:340px;background:#191919;border:1px solid #398b29;border-radius:22px;padding:25px;text-align:center}
+.popup-box h2{color:#53b943;margin-top:0}.popup-box p{font-size:18px;line-height:1.45}
+.popup-box button{width:100%;padding:15px;border:0;border-radius:30px;background:#398b29;color:#071006;font-size:18px;font-weight:bold}
+@media(max-height:650px){.tools{height:40px;margin-bottom:7px}.keys{grid-auto-rows:min(calc((100vw - 7vw - 3 * 8px)/4),calc((100dvh - 175px)/5));gap:8px}#expression{padding-top:4px;padding-bottom:8px}}
 </style>
 </head>
 <body>
@@ -79,101 +30,68 @@ html,body{
     <input id="expression" value="" readonly aria-label="Calculation">
     <div class="result" id="result"></div>
   </div>
-
   <div class="tools">
-    <button onclick="clearAll()" aria-label="Clear history">◷</button>
-    <button onclick="add('(')" aria-label="Parenthesis">( )</button>
+    <button onclick="clearAll()" aria-label="Clear">◷</button>
+    <button onclick="addParen()" aria-label="Parentheses">▤</button>
     <button onclick="add('√(')" aria-label="Square root">√</button>
-    <button onclick="backspace()" class="green">⌫</button>
+    <button onclick="backspace()" class="green" aria-label="Delete">⌫</button>
   </div>
-
   <div class="keys">
     <button class="key red" onclick="clearAll()">C</button>
-    <button class="key green" onclick="add('(')">( )</button>
+    <button class="key green" onclick="addParen()">( )</button>
     <button class="key green" onclick="add('%')">%</button>
     <button class="key green" onclick="add('÷')">÷</button>
-
     <button class="key" onclick="add('7')">7</button>
     <button class="key" onclick="add('8')">8</button>
     <button class="key" onclick="add('9')">9</button>
     <button class="key green" onclick="add('×')">×</button>
-
     <button class="key" onclick="add('4')">4</button>
     <button class="key" onclick="add('5')">5</button>
     <button class="key" onclick="add('6')">6</button>
     <button class="key green" onclick="add('−')">−</button>
-
     <button class="key" onclick="add('1')">1</button>
     <button class="key" onclick="add('2')">2</button>
     <button class="key" onclick="add('3')">3</button>
     <button class="key green" onclick="add('+')">+</button>
-
     <button class="key" onclick="toggleSign()">+/−</button>
     <button class="key" onclick="add('0')">0</button>
     <button class="key" onclick="add('.')">.</button>
     <button class="key equal" onclick="calculate()">=</button>
   </div>
 </div>
-
+<div id="popup">
+  <div class="popup-box">
+    <h2>😂 PRANK!</h2>
+    <p>Calculator unlock: ₹99</p>
+    <p>मज़ाक था! कोई payment नहीं करनी है।</p>
+    <button onclick="closePopup()">ठीक है 😂</button>
+  </div>
+</div>
 <script>
-const input = document.getElementById('expression');
-const result = document.getElementById('result');
-let expression = '';
-let finished = false;
-
-function render(){
-  input.value = expression;
-}
+const input=document.getElementById('expression');
+const result=document.getElementById('result');
+let expression='',finished=false,parenOpen=true;
+function render(){input.value=expression}
 function add(value){
-  if(finished && /[0-9.(√]/.test(value)){
-    expression = '';
-  }
-  finished = false;
-  expression += value;
-  render();
-  result.textContent = '';
+  if(finished && /[0-9.(√]/.test(value)) expression='';
+  finished=false;expression+=value;render();result.textContent='';
 }
-function clearAll(){
-  expression = '';
-  finished = false;
-  render();
-  result.textContent = '';
-}
-function backspace(){
-  expression = expression.slice(0,-1);
-  finished = false;
-  render();
-  result.textContent = '';
-}
-function toggleSign(){
-  if(!expression) return;
-  expression = expression.startsWith('−')
-    ? expression.slice(1) : '−' + expression;
-  render();
-}
+function addParen(){add(parenOpen?'(' : ')');parenOpen=!parenOpen}
+function clearAll(){expression='';finished=false;parenOpen=true;render();result.textContent=''}
+function backspace(){expression=expression.slice(0,-1);finished=false;render();result.textContent=''}
+function toggleSign(){if(!expression)return;expression=expression.startsWith('−')?expression.slice(1):'−'+expression;render()}
 function calculate(){
-  if(!expression) return;
-  try{
-    let e = expression
-      .replace(/×/g,'*')
-      .replace(/÷/g,'/')
-      .replace(/−/g,'-')
-      .replace(/√\(/g,'Math.sqrt(')
-      .replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');
-    if(!/^[0-9+\-*/().\sMathsqrt]+$/.test(e))
-      throw Error();
-    const answer = Function('"use strict";return ('+e+')')();
-    if(typeof answer !== 'number' || !Number.isFinite(answer))
-      throw Error();
-    result.textContent = '= ' + Number(answer.toPrecision(12));
-    expression = String(Number(answer.toPrecision(12)));
-    render();
-    finished = true;
-  }catch{
-    result.textContent = 'Invalid expression';
-    finished = true;
-  }
+ if(!expression)return;
+ try{
+  let e=expression.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/√\(/g,'Math.sqrt(').replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');
+  if(!/^[0-9+\-*/().\sMathsqrt]+$/.test(e))throw Error();
+  const answer=Function('"use strict";return ('+e+')')();
+  if(typeof answer!=='number'||!Number.isFinite(answer))throw Error();
+  const value=String(Number(answer.toPrecision(12)));result.textContent='= '+value;expression=value;render();finished=true;
+ }catch{result.textContent='Error';finished=true}
 }
+window.addEventListener('load',()=>{document.getElementById('popup').style.display='flex'});
+function closePopup(){document.getElementById('popup').style.display='none'}
 </script>
 </body>
 </html>
