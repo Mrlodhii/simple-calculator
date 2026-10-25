@@ -1,179 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Full Screen Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Calculator</title>
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:#10141c;
-  color:white;
+html,body{
+  margin:0;width:100%;height:100%;
+  background:#000;color:white;
   font-family:Arial,sans-serif;
+  overflow:hidden;
 }
-.calculator{
-  width:100%;
-  min-height:100dvh;
-  padding:20px;
-  display:flex;
+.app{
+  height:100vh;height:100dvh;
+  width:100%;display:flex;
   flex-direction:column;
-  justify-content:center;
+  padding:12px 3.5% max(12px,env(safe-area-inset-bottom));
 }
-h2{text-align:center;color:#53ff75}
-#display{
-  width:100%;
-  height:100px;
-  margin:15px 0 25px;
-  background:#202735;
-  color:white;
-  border:0;
-  border-radius:15px;
-  text-align:right;
-  font-size:36px;
-  padding:15px;
+.display-area{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
 }
-.buttons{
+#expression{
+  flex:1;min-height:0;width:100%;
+  background:transparent;border:0;outline:0;
+  color:white;text-align:right;
+  font-size:clamp(32px,8vw,60px);
+  padding:20px 8px;
+}
+.tools{
+  height:65px;flex-shrink:0;
+  display:flex;align-items:center;
+  justify-content:space-around;
+  border-bottom:1px solid #333;
+  margin-bottom:12px;
+}
+.tools button{
+  border:0;background:transparent;color:white;
+  font-size:23px;padding:8px;
+}
+.keys{
+  height: min(65%, 680px);
+  flex-shrink:0;
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr));
+  gap:clamp(8px,2.3vw,16px);
 }
-button{
-  height:75px;
-  border:0;
-  border-radius:15px;
-  font-size:27px;
-  background:#293344;
-  color:white;
-}
-.operator{background:#176b43}
-.clear{background:#b93445}
-.equal{background:#53ff75;color:#10141c}
-#popup{
-  position:fixed;
-  inset:0;
-  background:#000d;
-  display:none;
-  align-items:center;
+.key{
+  border:0;border-radius:50%;
+  background:#191919;color:white;
+  font-size:clamp(25px,6vw,40px);
+  display:flex;align-items:center;
   justify-content:center;
-  padding:20px;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
 }
-.popup-box{
-  background:#202735;
-  border:2px solid #53ff75;
-  border-radius:20px;
-  padding:28px;
-  text-align:center;
-  width:100%;
-  max-width:350px;
+.green{color:#39852b}
+.red{color:#ff3838}
+.equal{background:#398b29;color:#071006}
+.key:active{filter:brightness(1.5)}
+.result{
+  font-size:clamp(22px,5vw,32px);
+  color:#999;text-align:right;
+  min-height:32px;padding-right:8px;
 }
-.popup-box h2{color:#53ff75}
-.popup-box p{font-size:18px;line-height:1.5}
-.popup-box button{
-  width:100%;
-  height:55px;
-  margin-top:12px;
-  background:#53ff75;
-  color:#10141c;
-  font-size:18px;
-}
-@media(min-width:600px){
-  .calculator{max-width:480px;margin:auto}
+@media(max-height:700px){
+  .tools{height:42px;margin-bottom:7px}
+  .keys{height:66%;gap:6px}
+  .app{padding-top:5px}
 }
 </style>
 </head>
 <body>
-
-<div class="calculator">
-  <h2>MY CALCULATOR</h2>
-  <input id="display" value="0" readonly>
-
-  <div class="buttons">
-    <button class="clear" onclick="clearDisplay()">AC</button>
-    <button onclick="deleteLast()">DEL</button>
-    <button class="operator" onclick="add('%')">%</button>
-    <button class="operator" onclick="add('/')">÷</button>
-
-    <button onclick="add('7')">7</button>
-    <button onclick="add('8')">8</button>
-    <button onclick="add('9')">9</button>
-    <button class="operator" onclick="add('*')">×</button>
-
-    <button onclick="add('4')">4</button>
-    <button onclick="add('5')">5</button>
-    <button onclick="add('6')">6</button>
-    <button class="operator" onclick="add('-')">−</button>
-
-    <button onclick="add('1')">1</button>
-    <button onclick="add('2')">2</button>
-    <button onclick="add('3')">3</button>
-    <button class="operator" onclick="add('+')">+</button>
-
-    <button onclick="add('0')">0</button>
-    <button onclick="add('.')">.</button>
-    <button onclick="clearDisplay()">C</button>
-    <button class="equal" onclick="calculate()">=</button>
+<div class="app">
+  <div class="display-area">
+    <input id="expression" value="" readonly aria-label="Calculation">
+    <div class="result" id="result"></div>
   </div>
-</div>
 
-<div id="popup">
-  <div class="popup-box">
-    <h2>😂 PRANK ALERT!</h2>
-    <p>Calculator unlock: ₹99</p>
-    <p>अरे दोस्त! मज़ाक था 😂<br>तुम्हें कोई पैसे नहीं देने हैं।</p>
-    <button onclick="closePopup()">😂 पकड़े गए!</button>
+  <div class="tools">
+    <button onclick="clearAll()" aria-label="Clear history">◷</button>
+    <button onclick="add('(')" aria-label="Parenthesis">( )</button>
+    <button onclick="add('√(')" aria-label="Square root">√</button>
+    <button onclick="backspace()" class="green">⌫</button>
+  </div>
+
+  <div class="keys">
+    <button class="key red" onclick="clearAll()">C</button>
+    <button class="key green" onclick="add('(')">( )</button>
+    <button class="key green" onclick="add('%')">%</button>
+    <button class="key green" onclick="add('÷')">÷</button>
+
+    <button class="key" onclick="add('7')">7</button>
+    <button class="key" onclick="add('8')">8</button>
+    <button class="key" onclick="add('9')">9</button>
+    <button class="key green" onclick="add('×')">×</button>
+
+    <button class="key" onclick="add('4')">4</button>
+    <button class="key" onclick="add('5')">5</button>
+    <button class="key" onclick="add('6')">6</button>
+    <button class="key green" onclick="add('−')">−</button>
+
+    <button class="key" onclick="add('1')">1</button>
+    <button class="key" onclick="add('2')">2</button>
+    <button class="key" onclick="add('3')">3</button>
+    <button class="key green" onclick="add('+')">+</button>
+
+    <button class="key" onclick="toggleSign()">+/−</button>
+    <button class="key" onclick="add('0')">0</button>
+    <button class="key" onclick="add('.')">.</button>
+    <button class="key equal" onclick="calculate()">=</button>
   </div>
 </div>
 
 <script>
-const display = document.getElementById('display');
+const input = document.getElementById('expression');
+const result = document.getElementById('result');
 let expression = '';
 let finished = false;
 
-function add(value) {
-  if (finished) {
+function render(){
+  input.value = expression;
+}
+function add(value){
+  if(finished && /[0-9.(√]/.test(value)){
     expression = '';
-    finished = false;
   }
+  finished = false;
   expression += value;
-  display.value = expression || '0';
+  render();
+  result.textContent = '';
 }
-
-function clearDisplay() {
+function clearAll(){
   expression = '';
-  display.value = '0';
   finished = false;
+  render();
+  result.textContent = '';
 }
-
-function deleteLast() {
-  expression = expression.slice(0, -1);
-  display.value = expression || '0';
+function backspace(){
+  expression = expression.slice(0,-1);
   finished = false;
+  render();
+  result.textContent = '';
 }
-
-function calculate() {
-  if (!expression) return;
-  try {
-    if (!/^[0-9+\-*/%.() ]+$/.test(expression)) throw Error();
-    const result = Function('"use strict";return (' + expression + ')')();
-    if (!Number.isFinite(result)) throw Error();
-    display.value = String(Number(result.toPrecision(12)));
-    expression = display.value;
+function toggleSign(){
+  if(!expression) return;
+  expression = expression.startsWith('−')
+    ? expression.slice(1) : '−' + expression;
+  render();
+}
+function calculate(){
+  if(!expression) return;
+  try{
+    let e = expression
+      .replace(/×/g,'*')
+      .replace(/÷/g,'/')
+      .replace(/−/g,'-')
+      .replace(/√\(/g,'Math.sqrt(')
+      .replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');
+    if(!/^[0-9+\-*/().\sMathsqrt]+$/.test(e))
+      throw Error();
+    const answer = Function('"use strict";return ('+e+')')();
+    if(typeof answer !== 'number' || !Number.isFinite(answer))
+      throw Error();
+    result.textContent = '= ' + Number(answer.toPrecision(12));
+    expression = String(Number(answer.toPrecision(12)));
+    render();
     finished = true;
-  } catch {
-    display.value = 'Error';
-    expression = '';
+  }catch{
+    result.textContent = 'Invalid expression';
     finished = true;
   }
 }
-
-function closePopup() {
-  document.getElementById('popup').style.display = 'none';
-}
-
-window.addEventListener('load', () => {
-  document.getElementById('popup').style.display = 'flex';
-});
 </script>
 </body>
 </html>
